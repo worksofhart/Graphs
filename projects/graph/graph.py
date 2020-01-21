@@ -10,7 +10,6 @@ class Graph:
 
     def __init__(self):
         self.vertices = {}
-        self.visited = set()
 
     def add_vertex(self, vertex_id):
         """
@@ -93,14 +92,20 @@ class Graph:
         This should be done using recursion.
         """
 
-        # If the vertex has not been visited
-        if starting_vertex not in self.visited:
-            # Mark it as visited
-            print(starting_vertex)
-            self.visited.add(starting_vertex)
-            # Call dft_recursive for each edge
-            for neighbor in self.get_neighbors(starting_vertex):
-                self.dft_recursive(neighbor)
+        # Create an empty Set to store visited vertices
+        visited = set()
+
+        def traverse(starting_vertex):
+            # If the vertex has not been visited
+            if starting_vertex not in visited:
+                # Mark it as visited
+                print(starting_vertex)
+                visited.add(starting_vertex)
+                # Call traverse for each edge
+                for neighbor in self.get_neighbors(starting_vertex):
+                    traverse(neighbor)
+
+        traverse(starting_vertex)
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -164,13 +169,13 @@ class Graph:
             if current_vertex not in visited:
                 # Mark it as visited
                 visited.add(current_vertex)
-                # Add a path to each neighbor to the queue
+                # Add a path to each neighbor to the stack
                 for neighbor in self.get_neighbors(current_vertex):
                     new_path = path.copy()
                     new_path.append(neighbor)
                     s.push(new_path)
 
-    def dfs_recursive(self, starting_vertex):
+    def dfs_recursive(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -178,7 +183,32 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+
+        # Create an empty Set to store visited vertices
+        visited = set()
+
+        def search(path):
+            # Look at the last vertex in the path...
+            current_vertex = path[-1]
+            # And if it is the current vertex, we're done searching
+            if current_vertex == destination_vertex:
+                return path
+            else:
+                # If the vertex has not been visited
+                if current_vertex not in visited:
+                    # Mark it as visited
+                    visited.add(current_vertex)
+                    # Call search recursively on each new path
+                    for neighbor in self.get_neighbors(current_vertex):
+                        if neighbor not in path:
+                            # Add a path to each neighbor to the search
+                            new_path = path.copy()
+                            new_path.append(neighbor)
+                            current_path = search(new_path)
+                            if current_path is not None:
+                                return current_path
+
+        return search([starting_vertex])
 
 
 if __name__ == '__main__':
@@ -252,4 +282,5 @@ if __name__ == '__main__':
     '''
     print("Depth-first search")
     print(graph.dfs(1, 6))
+    print("Depth-first search recursive")
     print(graph.dfs_recursive(1, 6))
