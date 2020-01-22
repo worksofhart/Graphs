@@ -119,3 +119,15 @@ if __name__ == '__main__':
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)
+
+    print()
+    thousand_users = SocialGraph()
+    thousand_users.populate_graph(1000, 5)
+    many_connections = thousand_users.get_all_social_paths(1)
+    print(many_connections)
+    total_connections = len(many_connections)
+    print(f"User 1 is connected to {total_connections / 10}% of members")
+    all_path_lengths = sum(len(p) for p in many_connections.values())
+    avg_degrees_of_separation = all_path_lengths / total_connections
+    print(
+        f"With an average of {avg_degrees_of_separation} degrees of separation")
