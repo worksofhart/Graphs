@@ -50,30 +50,31 @@ class SocialGraph:
         for i in range(num_users):
             self.add_user(f"User {i+1}")
 
-        # # Create friendships
-        # # total_friendships = avg_friendships * num_users
-        # # Generate a list of all possible friendships
-        # possible_friendships = []
-        # # Avoid duplicates by ensuring the first ID is smaller than the second
-        # for user_id in self.users:
-        #     for friend_id in range(user_id + 1, self.last_id + 1):
-        #         possible_friendships.append((user_id, friend_id))
+        # Create friendships
+        # total_friendships = avg_friendships * num_users
+        # Generate a list of all possible friendships
+        possible_friendships = []
+        # Avoid duplicates by ensuring the first ID is smaller than the second
+        for user_id in self.users:
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
 
-        # # Shuffle the list
-        # random.shuffle(possible_friendships)
+        # Shuffle the list
+        random.shuffle(possible_friendships)
 
-        # # print(possible_friendships)
+        # print(possible_friendships)
 
-        # # Slice off excess friendships, add edge to the remaining
-        # # add_friendship will be called avg_friendships * num_users / 2 times
-        # for i in range(num_users * avg_friendships // 2):
-        #     friendship = possible_friendships[i]
-        #     self.add_friendship(friendship[0], friendship[1])
-
+        # Slice off excess friendships, add edge to the remaining
+        # add_friendship will be called avg_friendships * num_users / 2 times
         for i in range(num_users * avg_friendships // 2):
-            user_id1 = random.randint(1, self.last_id - 1)
-            user_id2 = random.randint(user_id1 + 1, self.last_id)
-            self.add_friendship(user_id1, user_id2)
+            friendship = possible_friendships[i]
+            self.add_friendship(friendship[0], friendship[1])
+
+        # STRETCH for O(n) time implementation (with tradeoffs)
+        # for i in range(num_users * avg_friendships // 2):
+        #     user_id1 = random.randint(1, self.last_id - 1)
+        #     user_id2 = random.randint(user_id1 + 1, self.last_id)
+        #     self.add_friendship(user_id1, user_id2)
 
     def get_friends(self, user_id):
         """
