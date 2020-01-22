@@ -15,7 +15,8 @@ class Graph:
         """
         Add a vertex to the graph.
         """
-        self.vertices[vertex_id] = set()
+        if vertex_id not in self.vertices:
+            self.vertices[vertex_id] = set()
 
     def add_edge(self, v1, v2):
         """
@@ -141,6 +142,45 @@ class Graph:
                     new_path.append(neighbor)
                     q.enqueue(new_path)
 
+        return None
+
+    def ancestor_finder(self, starting_vertex):
+        """
+        Modified BFS to find farthest ancestor of starting vertex
+        """
+        # Create a queue/stack as appropriate
+        q = Queue()
+        # Put the starting point in that
+        q.enqueue([starting_vertex])
+        # ^ in an array bc it will be an array w path
+        longest_path = [starting_vertex]  # keep track of the longest path
+        # Make a set to keep track of where we've been
+        visited = set()
+        # While there is stuff in the queue/stack
+        while q.size():
+            # Pop the first item (dequeue)-removes that vertex and returns that vertex
+            path = q.dequeue()
+            current_vertex = path[-1]
+            # If not visited
+            if current_vertex not in visited:
+                visited.add(current_vertex)
+                # For each edge in the item
+                for neighbor in self.get_neighbors(current_vertex):
+                    # Add that edge to the queue/stack
+                    # Make a copy of path rather than reference
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    q.enqueue(new_path)
+                    # If the new path is longer than current longest, make it the new longest path
+                    if len(new_path) > len(longest_path):
+                        longest_path = new_path
+                    # If equal in length to the longest and its id is less than previous longest's id,
+                    # make it the new longest path
+                    if len(new_path) == len(longest_path) and new_path[-1] < longest_path[-1]:
+                        longest_path = new_path
+
+        return longest_path
+
     def dfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
@@ -174,6 +214,8 @@ class Graph:
                     new_path = path.copy()
                     new_path.append(neighbor)
                     s.push(new_path)
+
+        return None
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
