@@ -50,25 +50,30 @@ class SocialGraph:
         for i in range(num_users):
             self.add_user(f"User {i+1}")
 
-        # Create friendships
-        # total_friendships = avg_friendships * num_users
-        # Generate a list of all possible friendships
-        possible_friendships = []
-        # Avoid duplicates by ensuring the first ID is smaller than the second
-        for user_id in self.users:
-            for friend_id in range(user_id + 1, self.last_id + 1):
-                possible_friendships.append((user_id, friend_id))
+        # # Create friendships
+        # # total_friendships = avg_friendships * num_users
+        # # Generate a list of all possible friendships
+        # possible_friendships = []
+        # # Avoid duplicates by ensuring the first ID is smaller than the second
+        # for user_id in self.users:
+        #     for friend_id in range(user_id + 1, self.last_id + 1):
+        #         possible_friendships.append((user_id, friend_id))
 
-        # Shuffle the list
-        random.shuffle(possible_friendships)
+        # # Shuffle the list
+        # random.shuffle(possible_friendships)
 
-        # print(possible_friendships)
+        # # print(possible_friendships)
 
-        # Slice off excess friendships, add edge to the remaining
-        # add_friendship will be called avg_friendships * num_users / 2 times
+        # # Slice off excess friendships, add edge to the remaining
+        # # add_friendship will be called avg_friendships * num_users / 2 times
+        # for i in range(num_users * avg_friendships // 2):
+        #     friendship = possible_friendships[i]
+        #     self.add_friendship(friendship[0], friendship[1])
+
         for i in range(num_users * avg_friendships // 2):
-            friendship = possible_friendships[i]
-            self.add_friendship(friendship[0], friendship[1])
+            user_id1 = random.randint(1, self.last_id - 1)
+            user_id2 = random.randint(user_id1 + 1, self.last_id)
+            self.add_friendship(user_id1, user_id2)
 
     def get_friends(self, user_id):
         """
@@ -121,12 +126,14 @@ if __name__ == '__main__':
     print(connections)
 
     print()
-    thousand_users = SocialGraph()
-    thousand_users.populate_graph(1000, 5)
-    many_connections = thousand_users.get_all_social_paths(1)
+    MANY_USERS_TOTAL = 10000
+    many_users = SocialGraph()
+    many_users.populate_graph(MANY_USERS_TOTAL, 5)
+    many_connections = many_users.get_all_social_paths(1)
     print(many_connections)
     total_connections = len(many_connections)
-    print(f"User 1 is connected to {total_connections / 10}% of members")
+    print(
+        f"User 1 is connected to {100 * total_connections / MANY_USERS_TOTAL}% of members")
     all_path_lengths = sum(len(p) for p in many_connections.values())
     avg_degrees_of_separation = all_path_lengths / total_connections
     print(

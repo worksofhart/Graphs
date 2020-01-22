@@ -62,7 +62,16 @@ Typically around 5, sometimes 6. See code starting at line 123.
 
 ## 4. Stretch Goal
 
-1. You might have found the results from question #2 above to be surprising. Would you expect results like this in real life? If not, what are some ways you could improve your friendship distribution model for more realistic results?
+1. You might have found the results from question #2 above to be surprising. Would you expect results like this in real life?
+
+There is a theory that any person is separated from any other person by no more than six degrees. In terms of social networks, degree of separation may be less for certain networks. For Twitter, studies have found between 3.435 and 4.67 DOS between random users.
+
+If not, what are some ways you could improve your friendship distribution model for more realistic results?
+
+Higher number of average friends.
 
 2. If you followed the hints for part 1, your `populate_graph()` will run in O(n^2) time. Refactor your code to run in O(n) time. Are there any tradeoffs that come with this implementation?
 
+You can skip prepopulating potential friendships and can iterate once, connecting users randomly to another user a total of num_users * avg_friendships / 2 times.
+
+Tradeoffs: unrealistic distribution, higher degree of separation.
