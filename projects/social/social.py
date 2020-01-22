@@ -1,3 +1,7 @@
+from util import Queue
+import random
+
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -33,37 +37,44 @@ class SocialGraph:
         """
         Takes a number of users and an average number of friendships
         as arguments
-
         Creates that number of users and a randomly distributed friendships
         between those users.
-
         The number of users must be greater than the average number of friendships.
         """
         # Reset graph
-        self.lastID = 0
+        self.last_id = 0
         self.users = {}
         self.friendships = {}
 
         # Add users
-        for i in range(numUsers):
-            self.addUser(F'User {i+1}')
+        for i in range(num_users):
+            self.add_user(f"User {i+1}")
 
         # Create friendships
-        # totalFriendships = avgFriendships * numUsers
+        # total_friendships = avg_friendships * num_users
         # Generate a list of all possible friendships
         possible_friendships = []
-        # avoid duplicates by ensuring the first ID is smaller than the second
-        for userID in self.users:
-            for friendID in range(userID + 1, self.lastID + 1):
-                possible_friendships.append((userID, friendID))
+        # Avoid duplicates by ensuring the first ID is smaller than the second
+        for user_id in self.users:
+            for friend_id in range(user_id + 1, self.last_id + 1):
+                possible_friendships.append((user_id, friend_id))
+
         # Shuffle the list
         random.shuffle(possible_friendships)
 
-        total_friendships = avgFriendships * numUsers // 2
-        # Slice off excess friendships, implement the rest
-        for i in range(total_friendships):
+        # print(possible_friendships)
+
+        # Slice off excess friendships, add edge to the remaining
+        # add_friendship will be called avg_friendships * num_users / 2 times
+        for i in range(num_users * avg_friendships // 2):
             friendship = possible_friendships[i]
-            self.addFriendship(friendship[0], friendship[1])
+            self.add_friendship(friendship[0], friendship[1])
+
+    def get_friends(self, user_id):
+        """
+        Get all friends (edges) of a user.
+        """
+        return self.friendships[user_id]
 
     def get_all_social_paths(self, user_id):
         """
@@ -74,9 +85,30 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
-        visited = {}  # Note that this is a dictionary, not a set
-        
-        
+
+        # Create an empty Set to store visited vertices
+        visited = {}
+
+        # Create an empty queue and enqueue the starting vertex ID
+        q = Queue()
+        q.enqueue([user_id])
+
+        # While the queue is not empty...
+        while q.size():
+            # Dequeue the first path
+            path = q.dequeue()
+            # Look at the last user in the path...
+            current_friend = path[-1]
+
+            # If the user has not been visited
+            if current_friend not in visited:
+                # Mark as visited and add their path
+                visited[current_friend] = path
+                # Add a path to each neighbor to the queue
+                for friend in self.get_friends(current_friend):
+                    new_path = path.copy()
+                    new_path.append(friend)
+                    q.enqueue(new_path)
 
         return visited
 
