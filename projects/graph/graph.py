@@ -141,6 +141,8 @@ class Graph:
                     new_path.append(neighbor)
                     q.enqueue(new_path)
 
+        return None
+
     def dfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
@@ -174,6 +176,8 @@ class Graph:
                     new_path = path.copy()
                     new_path.append(neighbor)
                     s.push(new_path)
+
+        return None
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
